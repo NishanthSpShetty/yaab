@@ -80,9 +80,10 @@ func Test_Read(t *testing.T) {
 	assert.Equal(t, 3, data.id, "must return the next value inserted on next Read call")
 	assert.Equal(t, uint64(3), buffer.readAt, "must advance readAt on Read call")
 
-	//further read must returon io.EOF
+	//further read call will reset the buffer and returons io.EOF
 	raw, err = buffer.Read()
 	assert.Equal(t, io.EOF, err, "error must io.EOF")
-	assert.Equal(t, uint64(3), buffer.readAt, "must not advance readAt on Read call")
+	assert.Equal(t, uint64(0), buffer.readAt, "must not advance readAt on Read call")
+	assert.Equal(t, uint64(0), buffer.Len(), "must not advance readAt on Read call")
 
 }
