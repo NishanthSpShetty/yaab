@@ -1,4 +1,4 @@
-module github.com/nishanthspshetty/buffer.go
+module github.com/nishanthspshetty/buffer
 
 go 1.13
 
