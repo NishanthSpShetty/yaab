@@ -15,6 +15,15 @@ key difference apart from it holds user defined data types,
 2. User can write any type of data, may be generics would help us to achive writing same type of data.
 
 ## Usage
+
+### Import
+
+```
+go get github.com/nishanthspshetty/buffer@v0.1.0
+```
+
+### Creating new buffer, writing and reading data
+
 ```
     //create new buffer with size 10
 	buf := buffer.NewBuffer(10)
