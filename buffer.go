@@ -21,7 +21,7 @@ func NewBuffer(capacity uint64) *Buffer {
 	}
 }
 
-//Reset reset the buffer, it will overwrite any content currently buffer holds
+//Reset reset the buffer, next write will start overwriting content currently buffer holds
 func (b *Buffer) Reset() {
 	b.length = 0
 	b.readAt = 0
@@ -35,6 +35,10 @@ func (b *Buffer) empty() bool {
 func (b *Buffer) Write(data interface{}) {
 	b.slice[b.length] = data
 	b.length += 1
+}
+
+func (b *Buffer) Grow(data []interface{}) {
+	//unimplemented
 }
 
 func (b *Buffer) WriteAll(data []interface{}) {
@@ -62,7 +66,7 @@ func (b *Buffer) Read() (interface{}, error) {
 
 //Len return the length of buffer, number of elements filled
 func (b *Buffer) Len() uint64 {
-	return b.length
+	return b.length - b.readAt
 }
 
 //Capacity return current buffer capacity

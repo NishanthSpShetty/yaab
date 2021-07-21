@@ -33,6 +33,11 @@ func Test_Write(t *testing.T) {
 	assert.Equal(t, uint64(1), buffer.length, "lenght must be 1 after writing first data")
 	buffer.Write(data)
 	assert.Equal(t, uint64(2), buffer.length, "lenght must be 2 after writing first data")
+
+	//write more than defined capacity
+	//	for i := 0; i < 20; i += 1 {
+	//		buffer.Write(data)
+	//	}
 }
 
 func Test_Read(t *testing.T) {
@@ -85,5 +90,26 @@ func Test_Read(t *testing.T) {
 	assert.Equal(t, io.EOF, err, "error must io.EOF")
 	assert.Equal(t, uint64(0), buffer.readAt, "must not advance readAt on Read call")
 	assert.Equal(t, uint64(0), buffer.Len(), "must not advance readAt on Read call")
+}
 
+func Test_Len(t *testing.T) {
+	buffer := NewBuffer(10)
+	data1 := &Testdata{
+		id:   1,
+		name: "buffello",
+	}
+
+	data2 := &Testdata{
+		id:   2,
+		name: "buffello",
+	}
+	buffer.Write(data1)
+	buffer.Write(data2)
+	assert.Equal(t, uint64(2), buffer.Len(), "must return 2 after writing 2 elements")
+	buffer.Read()
+	assert.Equal(t, uint64(1), buffer.Len(), "must return 1 after reading 1 elements")
+	buffer.Read()
+	assert.Equal(t, uint64(0), buffer.Len(), "must return 0 after reading all elements")
+	buffer.Write(data1)
+	assert.Equal(t, uint64(1), buffer.Len(), "must return 1 after writing 1 elements")
 }
