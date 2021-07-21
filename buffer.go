@@ -6,16 +6,16 @@ import (
 
 type Buffer struct {
 	slice    []interface{}
-	length   uint64
-	capacity uint64
-	readAt   uint64
+	offset   int
+	capacity int
+	readAt   int
 }
 
 //NewBuffer create new buffer with given capacity of interface type
-func NewBuffer(capacity uint64) *Buffer {
+func NewBuffer(capacity int) *Buffer {
 	return &Buffer{
 		capacity: capacity,
-		length:   0,
+		offset:   0,
 		slice:    make([]interface{}, capacity),
 		readAt:   0,
 	}
@@ -23,22 +23,47 @@ func NewBuffer(capacity uint64) *Buffer {
 
 //Reset reset the buffer, next write will start overwriting content currently buffer holds
 func (b *Buffer) Reset() {
-	b.length = 0
+	b.offset = 0
 	b.readAt = 0
 }
 
 func (b *Buffer) empty() bool {
-	return b.length == b.readAt
+	return b.offset == b.readAt
 }
 
 //Write write data at next write location.
 func (b *Buffer) Write(data interface{}) {
-	b.slice[b.length] = data
-	b.length += 1
+	if b.offset == b.capacity {
+		//all we need is the space to write 1 element for now
+		b.Grow(1)
+	}
+
+	b.slice[b.offset] = data
+	b.offset += 1
 }
 
-func (b *Buffer) Grow(data []interface{}) {
-	//unimplemented
+//Grow
+func (b *Buffer) Grow(n int) {
+	// Implementing using bytes.Buffer.grow()
+	//https://cs.opensource.google/go/go/+/refs/tags/go1.16.6:src/bytes/buffer.go;l=117
+	m := b.Len()
+
+	if m == 0 && b.offset != 0 {
+		b.Reset()
+	}
+
+	if n <= b.capacity/2-m {
+		// We can slide things down instead of allocating a new
+		// slice. We only need m+n <= c to slide, but
+		// we instead let capacity get twice as large so we
+		// don't spend all our time copying.
+		copy(b.slice, b.slice[b.offset:])
+	} else {
+		buf := make([]interface{}, n+2*b.capacity)
+		copy(buf, b.slice[b.offset:])
+		b.slice = buf
+		b.capacity = cap(buf)
+	}
 }
 
 func (b *Buffer) WriteAll(data []interface{}) {
@@ -47,7 +72,7 @@ func (b *Buffer) WriteAll(data []interface{}) {
 
 //Slice return the underlying slice, upto length
 func (b *Buffer) Slice() []interface{} {
-	return b.slice[:b.length]
+	return b.slice[:b.offset]
 }
 
 //Read return value pointed by readAt pointer and advance by 1 on each call
@@ -65,11 +90,11 @@ func (b *Buffer) Read() (interface{}, error) {
 }
 
 //Len return the length of buffer, number of elements filled
-func (b *Buffer) Len() uint64 {
-	return b.length - b.readAt
+func (b *Buffer) Len() int {
+	return b.offset - b.readAt
 }
 
 //Capacity return current buffer capacity
-func (b *Buffer) Capacity() uint64 {
+func (b *Buffer) Capacity() int {
 	return b.capacity
 }
