@@ -66,8 +66,17 @@ func (b *Buffer) Grow(n int) {
 	}
 }
 
+func (b *Buffer) remainingCapacity() int {
+	return b.capacity - b.offset
+}
+
 func (b *Buffer) WriteAll(data []interface{}) {
-	//unimplemented
+	n := len(data)
+	if n > b.remainingCapacity() {
+		b.Grow(n)
+	}
+	copy(b.slice[b.offset:], data[:n])
+	b.offset += n
 }
 
 //Slice return the underlying slice, upto offset
@@ -94,7 +103,7 @@ func (b *Buffer) Len() int {
 	return b.offset - b.readAt
 }
 
-//Capacity return current buffer capacity
+//Capacity return underlying slice capacity
 func (b *Buffer) Capacity() int {
 	return b.capacity
 }

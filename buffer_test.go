@@ -162,3 +162,30 @@ func Test_Grow(t *testing.T) {
 	buffer.Grow(10)
 	assert.Equal(t, 30, buffer.Capacity(), "return new buffer capacity after Grow()")
 }
+
+func Test_WriteAll(t *testing.T) {
+	buffer := NewBuffer(4)
+	data := []interface{}{1, 2, 3, 4}
+	//write data with len(data) == buffer.capacity
+	buffer.WriteAll(data)
+	assert.Equal(t, 4, buffer.Capacity(), "should not grow the buffer")
+	assert.Equal(t, 4, buffer.Len(), "must be set to number of elements written in write all")
+
+	//write_all with data must resize the buffer
+	buffer.WriteAll(data)
+	assert.Equal(t, 12, buffer.Capacity(), "must grow the buffer")
+	assert.Equal(t, 8, buffer.Len(), "must be set 8")
+
+	buffer = NewBuffer(4)
+	//write data with len(data) == buffer.capacity
+	buffer.WriteAll(data)
+	buffer.Write(100)
+	assert.Equal(t, 9, buffer.Capacity(), "must grow the buffer")
+	assert.Equal(t, 5, buffer.Len(), "must be set to number of elements written")
+
+	//write some large chunk
+	data = make([]interface{}, 1000)
+	buffer.WriteAll(data)
+	assert.Equal(t, 1018, buffer.Capacity(), "must grow the buffer")
+	assert.Equal(t, 1005, buffer.Len(), "must be set to number of elements written")
+}
