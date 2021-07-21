@@ -62,7 +62,7 @@ func Test_Write(t *testing.T) {
 	buffer.Write(data)
 
 	assert.Equal(t, 3, buffer.Len(), "len must return 3")
-	assert.Equal(t, 5, buffer.Capacity(), "capacity must return 3")
+	assert.Equal(t, 5, buffer.Cap(), "capacity must return 3")
 	buffer.Write(data)
 	buffer.Write(data)
 }
@@ -144,23 +144,23 @@ func Test_Len(t *testing.T) {
 func Test_Grow(t *testing.T) {
 	//buffer with 0 capacity
 	buffer := NewBuffer(0)
-	assert.Equal(t, 0, buffer.Capacity(), "must return 0")
+	assert.Equal(t, 0, buffer.Cap(), "must return 0")
 	//grow by 4
 	buffer.Grow(4)
-	assert.Equal(t, 4, buffer.Capacity(), "return new buffer capacity after grow")
+	assert.Equal(t, 4, buffer.Cap(), "return new buffer capacity after grow")
 	//try growing the same buffer again
 
 	buffer.Grow(4)
-	assert.Equal(t, 12, buffer.Capacity(), "return new buffer capacity after Grow()")
+	assert.Equal(t, 12, buffer.Cap(), "return new buffer capacity after Grow()")
 
 	//buffer with initial N capacity
 	buffer = NewBuffer(10)
-	assert.Equal(t, 10, buffer.Capacity(), "return the buffer capacity 10")
+	assert.Equal(t, 10, buffer.Cap(), "return the buffer capacity 10")
 	//try growing by the size which is less than half of the buffer.Capacity
 	buffer.Grow(4)
-	assert.Equal(t, 10, buffer.Capacity(), "should not grow the buffer")
+	assert.Equal(t, 10, buffer.Cap(), "should not grow the buffer")
 	buffer.Grow(10)
-	assert.Equal(t, 30, buffer.Capacity(), "return new buffer capacity after Grow()")
+	assert.Equal(t, 30, buffer.Cap(), "return new buffer capacity after Grow()")
 }
 
 func Test_WriteAll(t *testing.T) {
@@ -168,24 +168,24 @@ func Test_WriteAll(t *testing.T) {
 	data := []interface{}{1, 2, 3, 4}
 	//write data with len(data) == buffer.capacity
 	buffer.WriteAll(data)
-	assert.Equal(t, 4, buffer.Capacity(), "should not grow the buffer")
+	assert.Equal(t, 4, buffer.Cap(), "should not grow the buffer")
 	assert.Equal(t, 4, buffer.Len(), "must be set to number of elements written in write all")
 
 	//write_all with data must resize the buffer
 	buffer.WriteAll(data)
-	assert.Equal(t, 12, buffer.Capacity(), "must grow the buffer")
+	assert.Equal(t, 12, buffer.Cap(), "must grow the buffer")
 	assert.Equal(t, 8, buffer.Len(), "must be set 8")
 
 	buffer = NewBuffer(4)
 	//write data with len(data) == buffer.capacity
 	buffer.WriteAll(data)
 	buffer.Write(100)
-	assert.Equal(t, 9, buffer.Capacity(), "must grow the buffer")
+	assert.Equal(t, 9, buffer.Cap(), "must grow the buffer")
 	assert.Equal(t, 5, buffer.Len(), "must be set to number of elements written")
 
 	//write some large chunk
 	data = make([]interface{}, 1000)
 	buffer.WriteAll(data)
-	assert.Equal(t, 1018, buffer.Capacity(), "must grow the buffer")
+	assert.Equal(t, 1018, buffer.Cap(), "must grow the buffer")
 	assert.Equal(t, 1005, buffer.Len(), "must be set to number of elements written")
 }

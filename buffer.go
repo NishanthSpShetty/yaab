@@ -103,7 +103,7 @@ func (b *Buffer) Len() int {
 	return b.offset - b.readAt
 }
 
-//Capacity return underlying slice capacity
-func (b *Buffer) Capacity() int {
+//Cap return underlying slice capacity
+func (b *Buffer) Cap() int {
 	return b.capacity
 }
