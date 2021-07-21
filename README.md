@@ -57,3 +57,5 @@ buffer.Cap()
 buffer.Len()
 ```
 
+### License
+GNU General Public License v3.0, [refer](https://github.com/NishanthSpShetty/buffer/blob/main/LICENSE)
