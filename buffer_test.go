@@ -140,3 +140,25 @@ func Test_Len(t *testing.T) {
 	buffer.Write(data1)
 	assert.Equal(t, 1, buffer.Len(), "must return 1 after writing 1 elements")
 }
+
+func Test_Grow(t *testing.T) {
+	//buffer with 0 capacity
+	buffer := NewBuffer(0)
+	assert.Equal(t, 0, buffer.Capacity(), "must return 0")
+	//grow by 4
+	buffer.Grow(4)
+	assert.Equal(t, 4, buffer.Capacity(), "return new buffer capacity after grow")
+	//try growing the same buffer again
+
+	buffer.Grow(4)
+	assert.Equal(t, 12, buffer.Capacity(), "return new buffer capacity after Grow()")
+
+	//buffer with initial N capacity
+	buffer = NewBuffer(10)
+	assert.Equal(t, 10, buffer.Capacity(), "return the buffer capacity 10")
+	//try growing by the size which is less than half of the buffer.Capacity
+	buffer.Grow(4)
+	assert.Equal(t, 10, buffer.Capacity(), "should not grow the buffer")
+	buffer.Grow(10)
+	assert.Equal(t, 30, buffer.Capacity(), "return new buffer capacity after Grow()")
+}

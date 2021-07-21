@@ -70,9 +70,9 @@ func (b *Buffer) WriteAll(data []interface{}) {
 	//unimplemented
 }
 
-//Slice return the underlying slice, upto length
+//Slice return the underlying slice, upto offset
 func (b *Buffer) Slice() []interface{} {
-	return b.slice[:b.offset]
+	return b.slice[b.readAt:b.offset]
 }
 
 //Read return value pointed by readAt pointer and advance by 1 on each call
