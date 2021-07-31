@@ -185,7 +185,29 @@ func Test_WriteAll(t *testing.T) {
 
 	//write some large chunk
 	data = make([]interface{}, 1000)
+	data[0] = 1
+	data[2] = 2
 	buffer.WriteAll(data)
 	assert.Equal(t, 1018, buffer.Cap(), "must grow the buffer")
 	assert.Equal(t, 1005, buffer.Len(), "must be set to number of elements written")
+
+	//write all with grow
+	buffer = NewBuffer(16)
+	data = make([]interface{}, 100)
+	data[0] = 1
+	data[1] = 2
+	buffer.WriteAll(data)
+	data = make([]interface{}, 100)
+	data[0] = 1
+	data[1] = 2
+	buffer.WriteAll(data)
+	slice := buffer.Slice()
+	assert.Equal(t, 1, slice[0], "must return 1")
+	assert.Equal(t, 2, slice[1], "must return 2")
+
+	assert.Equal(t, 1, slice[100], "must return 1")
+	assert.Equal(t, 2, slice[101], "must return 2")
+	assert.Equal(t, 364, buffer.Cap(), "must grow the buffer")
+	assert.Equal(t, 200, buffer.Len(), "must be set to number of elements written")
+
 }
