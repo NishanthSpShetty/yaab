@@ -1,6 +1,6 @@
 # yaab- Yet Another Anytype Buffer
 
-![github action](https://github.com/NishanthSpShetty/buffer.go/actions/workflows/go.yml/badge.svg)
+![github action](https://github.com/NishanthSpShetty/yaab/actions/workflows/go.yml/badge.svg)
 
 ## Motivation
 Creating a slice/array of fixed size became too painful to manage as I had to manage index manually, bytes.Buffer provided a way to allocate fixed size buffer and call Write(), I dint have to worry about indexing, filling up the buffer and managing resizing it. 
@@ -19,7 +19,7 @@ key difference apart from it holds user defined data types,
 ### Import
 
 ```
-go get github.com/nishanthspshetty/buffer@v0.1.0
+go get github.com/nishanthspshetty/yaab@v0.2.0
 ```
 
 ### Creating new buffer, writing and reading data
@@ -57,4 +57,4 @@ buffer.Len()
 ```
 
 ### License
-GNU General Public License v3.0, [refer](https://github.com/NishanthSpShetty/buffer/blob/main/LICENSE)
+GNU General Public License v3.0, [refer](https://github.com/NishanthSpShetty/yaab/blob/main/LICENSE.md)
