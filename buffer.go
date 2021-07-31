@@ -60,7 +60,7 @@ func (b *Buffer) Grow(n int) {
 		copy(b.slice, b.slice[b.offset:])
 	} else {
 		buf := make([]interface{}, n+2*b.capacity)
-		copy(buf, b.slice[b.offset:])
+		copy(buf, b.slice[b.readAt:b.offset])
 		b.slice = buf
 		b.capacity = cap(buf)
 	}
