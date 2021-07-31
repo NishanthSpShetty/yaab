@@ -1,9 +1,9 @@
-# buffer.go
+# yaab- Yet Another Anytype Buffer
 
 ![github action](https://github.com/NishanthSpShetty/buffer.go/actions/workflows/go.yml/badge.svg)
 
 ## Motivation
-Creating a slice/array of fixed size became too painful manage as I had to manage index manually, bytes.Buffer provided a way to allocate fixed size buffer and call Write(), I dint have to worry about indexing, filling up the buffer and managing resizing it. 
+Creating a slice/array of fixed size became too painful to manage as I had to manage index manually, bytes.Buffer provided a way to allocate fixed size buffer and call Write(), I dint have to worry about indexing, filling up the buffer and managing resizing it. 
 I wanted something similar to user defined types, where I can allocate predefined memory and start writing to it, while the library managed indexing, resizing for me. 
 
 Creating a slice with `make([]Type, size)` and calling append would not work as it would start appending element to `size+1` location,
@@ -25,27 +25,26 @@ go get github.com/nishanthspshetty/buffer@v0.1.0
 ### Creating new buffer, writing and reading data
 
 ```
-    //create new buffer with size 10
-	buf := buffer.NewBuffer(10)
+//create new buffer with size 10
+buf := buffer.NewBuffer(10)
+//start writing data to buffer
+type SomeStruct struct {
+	Name string
+	Id   int
+}
 
-	//start writing data to buffer
-	type SomeStruct struct {
-		Name string
-		Id   int
-	}
+data := SomeStruct{
+	Name: "nishanth",
+	Id:   3243,
+}
+buf.Write(data)
 
-	data := SomeStruct{
-		Name: "nishanth",
-		Id:   3243,
-	}
-	buf.Write(data)
-
-	//Read back the data, it returns the element of type interface and error
-	raw, err := buf.Read()
-	//when we reach end of readable content in buffer, Read will return io.EOF
-	if err != io.EOF {
-		data = raw.(SomeStruct)
-	}
+//Read back the data, it returns the element of type interface and error
+raw, err := buf.Read()
+//when we reach end of readable content in buffer, Read will return io.EOF
+if err != io.EOF {
+	data = raw.(SomeStruct)
+}
 ```
 
 ### buffer stat

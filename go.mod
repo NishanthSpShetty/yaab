@@ -1,4 +1,4 @@
-module github.com/nishanthspshetty/buffer
+module github.com/nishanthspshetty/yaab
 
 go 1.13
 
